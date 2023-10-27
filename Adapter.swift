@@ -2,7 +2,7 @@
 //  Adapter.swift
 //  adapterPattern
 //
-//  Created by Said Tura Saidazimov on 27.10.2023.
+//  Created by Said Tura Saidazimov on 20.10.2023.
 //
 
 // Adapter to make AudioPlayer compatible with ModernAudioPlayer
