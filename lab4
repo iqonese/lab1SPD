@@ -1,0 +1,72 @@
+import Foundation
+
+// Observer Protocol
+protocol MessageObserver: AnyObject {
+    func update(message: String)
+}
+
+// Concrete Observer
+class ChatParticipant: MessageObserver {
+    let name: String
+
+    init(name: String) {
+        self.name = name
+    }
+
+    func update(message: String) {
+        print("\(name) received a message: \(message)")
+    }
+}
+
+// Subject Protocol
+protocol ChatRoom {
+    func registerObserver(observer: MessageObserver)
+    func removeObserver(observer: MessageObserver)
+    func notifyObservers(message: String)
+}
+
+// Concrete Subject
+class GeneralChatRoom: ChatRoom {
+    var participants: [MessageObserver] = []
+
+    func registerObserver(observer: MessageObserver) {
+        participants.append(observer)
+    }
+
+    func removeObserver(observer: MessageObserver) {
+        participants = participants.filter { $0 !== observer }
+    }
+
+    func notifyObservers(message: String) {
+        for participant in participants {
+            participant.update(message: message)
+        }
+    }
+
+    func sendMessage(message: String) {
+        print("General Chat Room: Sending message...")
+        notifyObservers(message: message)
+    }
+}
+
+// Factory for creating Chat Participants
+class ChatParticipantFactory {
+    static func createParticipant(name: String) -> ChatParticipant {
+        return ChatParticipant(name: name)
+    }
+}
+
+// Usage
+let generalChatRoom = GeneralChatRoom()
+
+let participant1 = ChatParticipantFactory.createParticipant(name: "Alice")
+let participant2 = ChatParticipantFactory.createParticipant(name: "Bob")
+
+generalChatRoom.registerObserver(observer: participant1)
+generalChatRoom.registerObserver(observer: participant2)
+
+generalChatRoom.sendMessage(message: "Hello, everyone!")
+
+generalChatRoom.removeObserver(observer: participant1)
+
+generalChatRoom.sendMessage(message: "Welcome to the chat!")
